@@ -48,6 +48,41 @@
 - Node.js 14+
 - MongoDB 数据库
 
+### MongoDB 启动与配置
+
+#### macOS 环境
+
+如果使用 Homebrew 安装的 MongoDB：
+
+```bash
+# 启动 MongoDB 服务
+brew services start mongodb-community
+
+# 停止 MongoDB 服务
+brew services stop mongodb-community
+
+# 重启 MongoDB 服务
+brew services restart mongodb-community
+```
+
+#### Windows 环境
+
+如果使用 MongoDB Compass 或手动安装：
+
+```bash
+# 启动 MongoDB 服务（命令行）
+net start MongoDB
+
+# 停止 MongoDB 服务
+net stop MongoDB
+```
+
+#### 使用 MongoDB Atlas（云服务）
+
+1. 在 [MongoDB Atlas](https://www.mongodb.com/atlas) 创建账户并设置集群
+2. 获取连接字符串
+3. 在 `.env` 文件中设置 `MONGODB_URI`
+
 ### 安装步骤
 
 1. 克隆项目
@@ -61,7 +96,27 @@ cd ts-auth-api-main
 
 ```bash
 cp .env.example .env
-# 编辑 .env 文件，设置数据库连接信息和 JWT 密钥
+# 编辑 .env 文件，设置以下环境变量
+```
+
+在 `.env` 文件中需要配置的关键环境变量：
+
+```
+# MongoDB 连接字符串
+# 本地开发环境示例：
+MONGODB_URI=mongodb://localhost:27017/ts-auth-api
+
+# 或使用 MongoDB Atlas 连接字符串：
+# MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/ts-auth-api?retryWrites=true&w=majority
+
+# JWT 密钥（用于签名令牌）
+JWT_SECRET=your-secret-key-here-please-change-in-production
+
+# JWT 令牌过期时间（秒）
+JWT_EXPIRES_IN=3600
+
+# 服务器端口
+PORT=6060
 ```
 
 3. 安装依赖
