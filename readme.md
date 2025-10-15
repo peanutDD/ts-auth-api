@@ -50,9 +50,24 @@
 
 ### MongoDB 启动与配置
 
-#### macOS 环境
+#### 检查 MongoDB 是否已运行
 
-如果使用 Homebrew 安装的 MongoDB：
+首先检查系统中是否已有MongoDB实例在运行：
+
+```bash
+ps aux | grep mongod
+```
+
+如果看到MongoDB进程（通常是`/opt/homebrew/opt/mongodb-community/bin/mongod`），则表示服务已在运行。
+
+测试连接是否正常：
+
+```bash
+mongosh --eval "db.adminCommand('ping')"
+# 成功时返回: { ok: 1 }
+```
+
+#### macOS 环境（使用 Homebrew）
 
 ```bash
 # 启动 MongoDB 服务
@@ -64,6 +79,29 @@ brew services stop mongodb-community
 # 重启 MongoDB 服务
 brew services restart mongodb-community
 ```
+
+#### 解决常见启动问题
+
+1. **socket 文件权限问题**：
+   ```bash
+   sudo rm -f /tmp/mongodb-27017.sock
+   brew services restart mongodb-community
+   ```
+
+2. **日志目录不存在**：
+   ```bash
+   sudo mkdir -p /usr/local/var/log/mongodb
+   sudo chown -R $(whoami) /usr/local/var/log/mongodb
+   ```
+
+3. **使用备用端口**（如果默认端口27017被占用）：
+   ```bash
+   mongod --dbpath /usr/local/var/mongodb --port 27018 --logpath /usr/local/var/log/mongodb/mongo2.log --fork
+   ```
+   然后在`.env`文件中设置：
+   ```
+   MONGODB_URI=mongodb://localhost:27018/ts-auth-api
+   ```
 
 #### Windows 环境
 

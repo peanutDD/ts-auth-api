@@ -11,6 +11,13 @@ import { checkBody } from "../utils/validator";
 
 import { wrapAsync } from "../helpers/wrap-async";
 
+// 扩展Request接口，添加currentUser属性
+declare module 'express' {
+  interface Request {
+    currentUser?: IUserDocument;
+  }
+}
+
 /**
  * show posts list
  *
