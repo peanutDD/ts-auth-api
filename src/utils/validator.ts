@@ -26,11 +26,12 @@ export const validateLoginInput = (
 ) => {
   let errors: LoginInputError = {};
 
-  if (validator.isEmpty(username.trim())) {
+  // 检查字段是否存在且非空
+  if (!username || validator.isEmpty(username.trim())) {
     errors.username = "Username must not be empty";
   }
 
-  if (isEmpty(password.trim())) {
+  if (!password || isEmpty(password.trim())) {
     errors.password = "Password must not be empty";
   }
 
@@ -45,31 +46,29 @@ export const validateRegisterInput = (
 ) => {
   let errors: RegisterInputError = {};
 
-  if (isEmpty(username.trim())) {
+  // 检查字段是否存在且非空
+  if (!username || isEmpty(username.trim())) {
     errors.username = "Username must not be empty";
-  }
-
-  if (!isLength(username.trim(), { min: 6 })) {
+  } else if (!isLength(username.trim(), { min: 6 })) {
     errors.username = "Username must be at least 6 characters long";
   }
 
-  if (isEmpty(password.trim())) {
+  if (!password || isEmpty(password.trim())) {
     errors.password = "Password must not be empty";
   }
 
-  if (isEmpty(confirmPassword.trim())) {
+  if (!confirmPassword || isEmpty(confirmPassword.trim())) {
     errors.confirmPassword = "Confirmed password must not be empty";
   }
 
-  if (!equals(password, confirmPassword)) {
+  // 只有当密码和确认密码都存在时，才检查它们是否匹配
+  if (password && confirmPassword && !equals(password, confirmPassword)) {
     errors.confirmPassword = "Passwords must match";
   }
 
-  if (isEmpty(email.trim())) {
+  if (!email || isEmpty(email.trim())) {
     errors.email = "Email must not be empty";
-  }
-
-  if (!isEmail(email)) {
+  } else if (!isEmail(email)) {
     errors.email = "Email must be a valid email address";
   }
 
