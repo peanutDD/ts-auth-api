@@ -149,7 +149,7 @@ export class Application {
     });
   };
 
-  createUser = async (): Promise<any> => {
+  createUser = async (): Promise<void> => {
     try {
       const user = await User.findOne({ username: config.user.username });
       if (user) return;
@@ -168,7 +168,7 @@ export class Application {
     }
   };
 
-  createAdmin = async (): Promise<any> => {
+  createAdmin = async (): Promise<void> => {
     try {
 
       const adminDatas = [
@@ -185,20 +185,24 @@ export class Application {
       ];
 
       const admins = await Admin.find({
-        username: {$in: [adminDatas[0].username, adminDatas[1].password]},
+        username: {$in: [adminDatas[0].username, adminDatas[1].username]},
       });
       if (admins.length > 0) return;
-      adminDatas.map(async (data:{username: string, password: string, isAdmin: boolean}) => {
-        const hashedPassword = await bcrypt.hash(data.password, 10)
+      
+      // 使用 Promise.all 确保所有异步操作完成
+      await Promise.all(
+        adminDatas.map(async (data:{username: string, password: string, isAdmin: boolean}) => {
+          const hashedPassword = await bcrypt.hash(data.password, 10)
 
-        let admin = new Admin({
-          username: data.username,
-          password: hashedPassword,
-          isAdmin: data.isAdmin
+          let admin = new Admin({
+            username: data.username,
+            password: hashedPassword,
+            isAdmin: data.isAdmin
+          })
+
+          await admin.save()
         })
-
-        await admin.save()
-      })
+      )
     
     } catch (error) {
       return Promise.reject(error);
