@@ -40,7 +40,7 @@ export const RATE_LIMIT = {
   API_WINDOW_MS: 15 * 60 * 1000,  // 15分钟
   API_MAX_REQUESTS: 100,          // 最多100个请求
   AUTH_WINDOW_MS: 15 * 60 * 1000, // 15分钟
-  AUTH_MAX_REQUESTS: 5,           // 最多5次尝试
+  AUTH_MAX_REQUESTS: 5,           // 最多5次失败尝试（允许失败5次，第6次才限流）
   STRICT_WINDOW_MS: 60 * 60 * 1000, // 1小时
   STRICT_MAX_REQUESTS: 10          // 最多10个请求
 };

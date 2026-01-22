@@ -71,7 +71,9 @@ export const postLogin = wrapAsync(
     }
 
     // 根据用户名查找用户
-    const user = await User.findOne({ username });
+    // 注意：由于 User 模型中 password 字段设置了 select: false，
+    // 需要使用 .select('+password') 显式包含密码字段用于验证
+    const user = await User.findOne({ username }).select('+password');
 
     // 如果用户不存在，返回错误
     if (!user) {
