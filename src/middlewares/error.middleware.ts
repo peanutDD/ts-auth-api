@@ -33,8 +33,15 @@ const errorMiddleware = (
     errors: error instanceof HttpException ? error.errors : undefined
   });
 
+  // 定义错误响应接口
+  interface ErrorResponse {
+    success: false;
+    message: string;
+    errors?: Record<string, string>;
+  }
+
   // 生产环境隐藏敏感错误信息
-  const errorResponse: any = {
+  const errorResponse: ErrorResponse = {
     success: false,
     message: isProduction && status === StatusCodes.INTERNAL_SERVER_ERROR 
       ? "Internal server error" 
